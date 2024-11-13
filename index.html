@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Quiz sobre JavaScript e Programação Web</title>
+</head>
+
+<body>
+    <h1>QUIZ</h1>
+    <form id="quiz-form">
+        <div id="question-container"></div>
+
+        <button type="button" onclick="submitQuiz()">Concluir Quiz</button>
+        <button type="button" onclick="resetQuiz()">Jogar Novamente</button>
+    </form>
+
+    <p id="resultado"></p>
+
+    <script>
+        // Questões 
+        const questions = [
+            { question: "Em JavaScript, qual é o tipo de dado primitivo?", options: ["int", "boolean", "string", "float"], answer: 2, topic: "JavaScript" },
+            { question: "O método é usado para adicionar um item no final de um array é?", options: ["push()", "pop()", "shift()", "unshift()"], answer: 0, topic: "JavaScript" },
+            { question: "Qual palavra-chave é usada para declarar uma constante?", options: ["const", "var", "let", "constant"], answer: 0, topic: "JavaScript" },
+            { question: "Como você exibe uma mensagem no console?", options: ["console.log()", "alert()", "print()", "console.write()"], answer: 0, topic: "JavaScript" },
+            { question: "Para carregar páginas web, qual protocolo é utilizado?", options: ["FTP", "HTTP", "SMTP", "POP3"], answer: 1, topic: "Programação Web" },
+            { question: "Qual evento JavaScript é acionado ao clicar em um elemento?", options: ["onmouseover", "onload", "onclick", "onchange"], answer: 2, topic: "JavaScript" },
+            { question: "Qual atributo HTML é usado para definir uma imagem?", options: ["src", "href", "img", "alt"], answer: 0, topic: "Programação Web" },
+            { question: "Na Programação WEB, qual comendo do CSS é usado para centralizar um texto?", options: ["text-align: center;", "align: center;", "justify: center;", "center: true;"], answer: 0, topic: "Programação Web" }
+        ];
+
+        // Carrega as questões 
+        function loadQuestions() {
+            const questionContainer = document.getElementById('question-container');
+            questionContainer.innerHTML = '';
+            questions.forEach((q, index) => {
+                const questionDiv = document.createElement('div');
+                questionDiv.classList.add('question');
+                questionDiv.innerHTML = `<p>${index + 1}. ${q.question}</p>`;
+
+                q.options.forEach((option, i) => {
+                    questionDiv.innerHTML += `
+                        <label>
+                            <input type="radio" name="question${index}" value="${i}">
+                            ${option}
+                        </label><br>
+                    `;
+                });
+                questionContainer.appendChild(questionDiv);
+            });
+        }
+
+        // Calcula o resultado e armazena a pontuação no localStorage
+        function submitQuiz() {
+            let score = 0;
+            questions.forEach((q, index) => {
+                const selectedOption = document.querySelector(`input[name="question${index}"]:checked`);
+                if (selectedOption && parseInt(selectedOption.value) === q.answer) {
+                    score++;
+                }
+            });
+
+            localStorage.setItem("quizScore", score);
+            document.getElementById('resultado').innerText = `Você acertou ${score} de ${questions.length} questões!`;
+        }
+
+
+        function resetQuiz() {
+            document.getElementById('quiz-form').reset();
+            document.getElementById('resultado').innerText = '';
+            localStorage.removeItem("quizScore");
+        }
+
+
+        window.onload = () => {
+            loadQuestions();
+            const savedScore = localStorage.getItem("quizScore");
+            if (savedScore !== null) {
+                document.getElementById('resultado').innerText = `Última pontuação: Você acertou ${savedScore} de ${questions.length} questões!`;
+            }
+        };
+    </script>
+
+    <footer>
+        <p>Site desenvolvido por &regThomaz Pires<br>
+            Contato: <a href="mailto:thomazpires@thomazpires.com">thomaz@thomazpires.com</a></p>
+    </footer>
+
+</body>
+
+</html>
